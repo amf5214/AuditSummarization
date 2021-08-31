@@ -10,13 +10,15 @@ from BackEnd import graph_types
 from SpecialDialogBoxes import DeleteAuditorDialog, AddAuditorDialog
 
 SPHERES_PATH = os.getcwd() + "/media/amazon_spheres.jpg"
+LOGO_PATH = os.getcwd() + "/media/amazon_logo.png"
 
 
 class PrimaryWindow(qtw.QMainWindow):
 
     def __init__(self, hor=None, ver=None):
         super().__init__()
-        # self.toolbar = self.addToolBar("Audit Analysis")
+        self.setWindowTitle("Audit Summarizer")
+        self.setWindowIcon(qtg.QIcon(LOGO_PATH))
         self.audit_filename = None
 
         self.horizontal_resolution = hor
