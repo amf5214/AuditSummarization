@@ -4,6 +4,7 @@ TEST_PATH = "/Users/austinfraley/Documents/foo_test_data_1.csv"
 AUDITOR_PATH = "/Users/austinfraley/PycharmProjects/AuditSummarization/Auditors.csv"
 AUDITOR_COL_INDEX_FOO = 0
 graph_types = ["Pie Chart", "Line Graph", "Scatter Plot", "Bar Graph"]
+graph_by_options = ["Graph By Floor", "Graph By Auditor"]
 
 
 def data_pull(csv):
@@ -11,16 +12,14 @@ def data_pull(csv):
     return pd.read_csv(csv, index_col=0)
 
 
-def auditor_df_to_dict(file_path, index):
+def audit_df_to_dict(file_path, index):
     auditor_df = data_pull(file_path)
     try:
-        index = [i for i,x in enumerate(auditor_df.columns) if x == index][0]
+        ind = [i for i, x in enumerate(auditor_df.columns) if x == index][0]
     except IndexError:
-        return "ERROR"
+        return "ERROR", "ERROR"
     auditor_dict = auditor_df.value_counts().to_dict()
-    new_auditor_dict = {x[index]:auditor_dict[x] for x in auditor_dict}
-    auditor_dict = new_auditor_dict
-    return auditor_dict
+    return auditor_dict, ind
 
 
 def auditor_data_pull(file_path):
@@ -34,10 +33,13 @@ def auditor_data_pull(file_path):
 
 def floor_audit_counts(auditor_file_path, audit_file_path, index):
     auditor_dict = auditor_data_pull(auditor_file_path)
-    audits_dict = auditor_df_to_dict(audit_file_path, index)
+    audits_dict, ind = audit_df_to_dict(audit_file_path, index)
+    print(audits_dict)
     if audits_dict == "ERROR":
         return "ERROR", "ERROR"
     else:
+        new_audits_dict = {x[ind]: audits_dict[x] for x in audits_dict}
+        audits_dict = new_audits_dict
         floor_counts = {"A01":0, "A02":0, "A03":0, "A04":0}
         for x in audits_dict:
             if x in auditor_dict:

@@ -6,7 +6,7 @@ from GenerateReport import MplCanvas, generate_report_objects, AUDITOR_FILE_PATH
 from BackEnd import auditor_data_pull, data_pull
 import os
 from config_processing import pull_config_files
-from BackEnd import graph_types
+from BackEnd import graph_types, graph_by_options
 from SpecialDialogBoxes import DeleteAuditorDialog, AddAuditorDialog, AddAuditConfigDialog, DeleteAuditConfigDialog
 
 
@@ -25,8 +25,8 @@ class PrimaryWindow(qtw.QMainWindow):
         self.horizontal_resolution = hor
         self.vertical_resolution = ver
 
-        self.setFixedHeight(self.vertical_resolution/1.6)
-        self.setFixedWidth(self.horizontal_resolution/2)
+        self.setMinimumHeight(self.vertical_resolution/1.6)
+        self.setMinimumWidth(self.horizontal_resolution/2)
 
         self.menu = qtw.QMenuBar(self)
         self.setMenuBar(self.menu)
@@ -155,6 +155,10 @@ class PrimaryWindow(qtw.QMainWindow):
         self.add_data = qtw.QPushButton("Add Data")
         self.add_data.clicked.connect(lambda: self.get_file_data(self.audit_selector_combo.currentText()))
         self.audit_widgets.append(self.add_data)
+        self.graph_by_combo = qtw.QComboBox()
+        self.audit_widgets.append(self.graph_by_combo)
+        for y in graph_by_options:
+            self.graph_by_combo.addItem(y)
         self.generate_report_pb = qtw.QPushButton("Generate Report")
         self.generate_report_pb.clicked.connect(lambda: generate_report_objects(self, self.audit_selector_combo.currentText()))
         self.audit_widgets.append(self.generate_report_pb)
@@ -165,6 +169,7 @@ class PrimaryWindow(qtw.QMainWindow):
         self.audit_widgets.append(self.choose_graph_type)
         self.audit_l.addWidget(self.audit_selector_combo)
         self.audit_l.addWidget(self.add_data)
+        self.audit_l.addWidget(self.graph_by_combo)
         self.audit_l.addWidget(self.choose_graph_type)
         self.audit_l.addWidget(self.generate_report_pb)
         self.audit_l.addStretch()
@@ -287,7 +292,16 @@ class PrimaryWindow(qtw.QMainWindow):
                     audit_tab_l.addRow(qtw.QLabel(y + ": "), qtw.QLabel(self.audits[x][y]))
                 else:
                     audit_tab_l.addRow(qtw.QLabel(y + ": "), qtw.QLineEdit(self.audits[x][y], readOnly=False, editingFinished=lambda: self.update_config_file(y)))
+            field_name = qtw.QLineEdit(placeholderText="Field Name", editingFinished=lambda: self.add_field_to_config())
+            field_value = qtw.QLineEdit(placeholderText="Field Value", readOnly=True)
+            audit_tab_l.addRow(field_name, field_value)
             self.audit_manager.addTab(audit_tab, x)
+
+    def add_field_to_config(self):
+        return
+        widget = self.audit_manager.currentWidget().layout().takeRow(0).fieldItem.widget().text()
+        file_path = os.getcwd() + "/config_files/" + str(widget) + ".txt"
+        self.fill_audit_manager_widget()
 
     def update_config_file(self, y):
         pull_config_files(self)

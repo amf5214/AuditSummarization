@@ -1,6 +1,7 @@
 import PyQt5.QtWidgets as qtw
 from config_processing import create_config_file, pull_config_files, delete_config_file
 
+
 class DeleteAuditorDialog(qtw.QDialog):
     def __init__(self, sender):
         super().__init__()

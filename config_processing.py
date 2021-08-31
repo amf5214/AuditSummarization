@@ -1,10 +1,4 @@
-import PyQt5.QtCore as qtc
-import PyQt5.QtWidgets as qtw
-import PyQt5.QtGui as qtg
-import pandas as pd
 import os
-from GenerateReport import MplCanvas, generate_report_objects, AUDITOR_FILE_PATH
-from BackEnd import auditor_data_pull, data_pull
 
 
 def pull_config_files(self):
