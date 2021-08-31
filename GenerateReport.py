@@ -9,7 +9,8 @@ from BackEnd import floor_audit_counts, data_pull
 import os
 from BackEnd import graph_types
 
-AUDITOR_FILE_PATH = os.getcwd() + "/Auditors.csv"
+
+AUDITOR_FILE_PATH = os.getcwd() + "/config_files/Auditors.csv"
 
 
 class MplCanvas(FigureCanvasQTAgg):
@@ -69,7 +70,6 @@ class ReportWindow(qtw.QMainWindow):
                 self.foo_counts.setAlignment(qtc.Qt.AlignCenter)
                 self.total_layout.addWidget(self.foo_total)
                 self.counts_layout.addWidget(self.foo_counts)
-
 
             except FileNotFoundError:
                 print("Error: FileName is not valid!")

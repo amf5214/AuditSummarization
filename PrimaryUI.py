@@ -7,7 +7,8 @@ from BackEnd import auditor_data_pull, data_pull
 import os
 from config_processing import pull_config_files
 from BackEnd import graph_types
-from SpecialDialogBoxes import DeleteAuditorDialog, AddAuditorDialog
+from SpecialDialogBoxes import DeleteAuditorDialog, AddAuditorDialog, AddAuditConfigDialog, DeleteAuditConfigDialog
+
 
 SPHERES_PATH = os.getcwd() + "/media/amazon_spheres.jpg"
 LOGO_PATH = os.getcwd() + "/media/amazon_logo.png"
@@ -39,17 +40,23 @@ class PrimaryWindow(qtw.QMainWindow):
         self.add_auditor_action = qtw.QAction("Add Auditor")
         self.delete_auditor_action = qtw.QAction("Delete Auditor")
         self.manage_audits = qtw.QAction("Manage Audits")
+        self.add_audit = qtw.QAction("Add Audit Configuration")
+        self.delete_audit = qtw.QAction("Delete Audit Configuration")
         self.view_auditors.triggered.connect(self.open_auditor_menu)
         self.add_auditor_action.triggered.connect(lambda: AddAuditorDialog(self).exec())
         self.delete_auditor_action.triggered.connect(lambda: DeleteAuditorDialog(self).exec())
         self.select_auditor_file.triggered.connect(lambda: self.get_file_data("Auditor"))
         self.manage_audits.triggered.connect(self.fill_audit_manager_widget)
+        self.add_audit.triggered.connect(lambda: AddAuditConfigDialog(self).exec())
+        self.delete_audit.triggered.connect(lambda: DeleteAuditConfigDialog(self).exec())
 
         self.managing_auditor_menu.addAction(self.view_auditors)
         self.managing_auditor_menu.addAction(self.select_auditor_file)
         self.managing_auditor_menu.addAction(self.add_auditor_action)
         self.managing_auditor_menu.addAction(self.delete_auditor_action)
         self.managing_audits_menu.addAction(self.manage_audits)
+        self.managing_audits_menu.addAction(self.add_audit)
+        self.managing_audits_menu.addAction(self.delete_audit)
 
         self.menu.addMenu(self.managing_auditor_menu)
         self.menu.addMenu(self.managing_audits_menu)
@@ -305,3 +312,9 @@ class PrimaryWindow(qtw.QMainWindow):
             widget = self.graph_layout.itemAt(x).widget()
             self.graph_layout.removeWidget(widget)
             widget.setParent(None)
+
+    def populate_delete_audit_combo(self):
+        self.audit_config_combo.clear()
+        pull_config_files(self)
+        for x in self.audits.keys():
+            self.audit_config_combo.addItem(x)

@@ -1,6 +1,4 @@
 import pandas as pd
-import PyQt5.QtWidgets as qtw
-
 
 TEST_PATH = "/Users/austinfraley/Documents/foo_test_data_1.csv"
 AUDITOR_PATH = "/Users/austinfraley/PycharmProjects/AuditSummarization/Auditors.csv"
@@ -52,7 +50,6 @@ def floor_audit_counts(auditor_file_path, audit_file_path, index):
                 floor_lst.append(y)
                 count_lst.append(floor_counts[y])
         audit_dict = {"floors": floor_lst, "counts": count_lst}
-        print(audit_dict)
         return floor_counts, audit_dict
 
 
@@ -60,4 +57,3 @@ if __name__ == "__main__":
     print(auditor_data_pull(AUDITOR_PATH))
     # print(auditor_df_to_dict(TEST_PATH))
     # print(floor_audit_counts(AUDITOR_PATH, TEST_PATH))
-    print(graph_types[1:4])
